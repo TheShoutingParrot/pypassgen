@@ -1,4 +1,43 @@
-from main import *
+from __main__ import *
+from .info import *
+
+import random
+
+def set_up_chars(c):
+    az = "abcdefghijklmnopqrstuvwxyz"
+    az += az.upper()
+
+    n = "0123456789"
+    sp = "!\"#¤&/()=?£$€§|<>-_.:,;~*' "
+
+    if c.lower() == 'all':
+        return az + n + sp
+
+    elif c.lower() == 'none':
+        return ''
+
+    elif c.lower() == 'az': 
+        return az
+
+    elif c.lower() == '09':
+        return n
+
+    elif c.lower() == 'sp':
+        return sp
+
+    elif c.lower() == 'az09':
+        return az + n
+
+    elif c.lower() == 'azsp':
+        return az + sp
+
+    elif c.lower() == '09sp':
+        return n + sp
+
+    else:
+        verbose_warning("The chars option was invalid...")
+        verbose_info("Changing to default (all)...")
+        return az + n + sp 
 
 def rand_chars(c, l):
     x = random.randint(0, round(l/2))
@@ -42,12 +81,20 @@ def create_password(c, w, l):
     verbose_info("Starting password generation...")
 
     if l < 10:
-        warning("All passwords under 10 chars are very weak (even 10 is very weak). I dont recommend using a password this short...")
+        verbose_warning("All passwords under 10 chars are very weak (even 10 is very weak). I dont recommend using a password this short...")
 
     if l == 1:
+        if c == '':
+            verbose_warning("Unable to create password, because there were no characters to use and the length was too short...")
+            error("Unable to create password...", 1)
         verbose_warning("The password length is set to 1, not good...")
         verbose_info("Due to the short length the normal process wont work, the program will select a random char from the chars list...")
-        return c[random.randint(0,len(c))]
+
+        try:
+            return c[random.randint(0,len(c))]
+        except:
+            verbose_warning("Unable to create password, reason unknown...")
+            error("Unable to create password...", 1)
 
     if c == '':
         if w == True:

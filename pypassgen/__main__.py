@@ -1,56 +1,24 @@
-import sys, getopt, random
+import sys, getopt 
 from termcolor import colored
-
-# Imports from this folder
-from password import *
-from info import *
-
-def set_up_chars(c):
-    az = "abcdefghijklmnopqrstuvwxyz"
-    az += az.upper()
-
-    n = "0123456789"
-    sp = "!\"#¤&/()=?£$€§|<>-_.:,;~*' "
-
-    if c.lower() == 'all':
-        return az + n + sp
-
-    elif c.lower() == 'none':
-        return ''
-
-    elif c.lower() == 'az': 
-        return az
-
-    elif c.lower() == '09':
-        return n
-
-    elif c.lower() == 'sp':
-        return sp
-
-    elif c.lower() == 'az09':
-        return az + n
-
-    elif c.lower() == 'azsp':
-        return az + sp
-
-    elif c.lower() == '09sp':
-        return n + sp
-            
+from .password import *
+from .info import *
 
 
-def main(argv):
+def main():
+
+    argv = sys.argv[1:]
+
     chars   = ''
     words   = False
     l       = None
 
-
     try:
-        opts, args = getopt.getopt(argv, "hc:w:l:", ["chars=", "words=", "length=", "verbose"])
+        opts, args = getopt.getopt(argv, "hc:w:l:", ["chars=", "words=", "length=", "verbose", "help"])
     except getopt.GetoptError:
         error("Command line syntax error. For help on the usage/command line arguments run: foo.py -h", 2)
 
     for opt, arg in opts:
-        if opt == '-h':
+        if opt == '-h' or opt == '--help':
             info("Usage: main.py -c <chars> -w <words> -l <length>\n\nThe <chars> are the characters included in the password.\n" +
                     "Options for <chars>:\n" +
                     "-all:      A-Z, 0-9, special characters (such as: !, &, %, etc) [DEFAULT]\n" +
@@ -78,13 +46,13 @@ def main(argv):
             sys.exit(0)
 
         elif opt in "--verbose":
-            verbose = True
+            verbose_is_true()
 
         elif opt in "-c":
             chars = arg.lower()
 
         elif opt in "-w":
-            if arg.lower() == 'yes':
+            if arg.lower() == 'yes' or arg.lower() == 'y':
                 words = True
 
         elif opt in "-l":
@@ -114,8 +82,8 @@ def main(argv):
 
 
 
-global verbose
-verbose = False
-
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    try:
+        main()
+    except KeyboardInterrupt:
+        error("Keyboard Interrupted..", 1)
