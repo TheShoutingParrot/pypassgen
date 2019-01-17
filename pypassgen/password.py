@@ -7,8 +7,11 @@ def set_up_chars(c):
     az = "abcdefghijklmnopqrstuvwxyz"
     az += az.upper()
 
+    chars = ''
+
     n = "0123456789"
     sp = "!\"#¤&/()=?£$€§|<>-_.:,;~*' "
+
 
     if c.lower() == 'all':
         return az + n + sp
@@ -16,28 +19,22 @@ def set_up_chars(c):
     elif c.lower() == 'none':
         return ''
 
-    elif c.lower() == 'az': 
-        return az
+    if 'az' in c.lower(): 
+        chars += az
 
-    elif c.lower() == '09':
-        return n
+    if '09' in c.lower():
+        chars +=  n
 
-    elif c.lower() == 'sp':
-        return sp
+    if 'sp' in c.lower():
+        chars +=  sp
 
-    elif c.lower() == 'az09':
-        return az + n
-
-    elif c.lower() == 'azsp':
-        return az + sp
-
-    elif c.lower() == '09sp':
-        return n + sp
-
-    else:
+    if chars == '':
         verbose_warning("The chars option was invalid...")
         verbose_info("Changing to default (all)...")
         return az + n + sp 
+
+    verbose_info("The characters that are gonna be used are: " + chars)
+    return chars
 
 def rand_chars(c, l):
     x = random.randint(0, round(l/2))
@@ -49,29 +46,45 @@ def rand_chars(c, l):
         
 def rand_word(l):
     # Some of the words here are from https://randomword.com... That is why some words are weird...
-    w0 = ["word", "rust", "linux", "gnu", "foo", "hello", "love", "snow", "zoo", "truck", "elon", "musk", "nasa",
-            "time", "goo", "grape", "by", "the", "way", "I", "use", "arch", "ufo", "dog", "bad", "good", "the",
+    short_w = ["word", "rust", "linux", "gnu", "foo", "hello", "love", "snow", "zoo", "truck", "elon", "musk", "nasa",
+            "time", "goo", "grape", "by", "the", "way",  "use", "arch", "ufo", "dog", "bad", "good", "the",
             "ugly", "for", "god", "grunt", "ape", "food", "root", "boot", "loot", "duck", "go", "bit", "run", "rub",
-            "gun", "sum", "math", "bavian"]
-    w1 = ["password", "programmer", "secure", "kilometer", "stallman", "universe", "shadow", "something", "bowman", 
+            "gun", "sum", "math", "bavian", "xmas", "new", "year", "dice"]
+
+    long_w = ["password", "programmer", "secure", "kilometer", "stallman", "universe", "shadow", "something", "bowman", 
             "python", "odyssey", "adventure", "mathematical", "surgery", "language", "dummies", "summary", "daysure",
-            "omnigatherum", "miscellaneous", "collection", "antechinus", "argentocracy", "knickerbockers", "nutarian",
-            "factualism", "pluviometer", "parasitaster", "curmurring", "obedientiary", "embryogenesis", "kymatology"]
+            "omnigatherum", "miscellaneous", "collection", "antechinus", "argentocracy", "nutarian", "factualism", 
+            "pluviometer", "parasitaster", "curmurring", "obedientiary", "embryogenesis", "kymatology", "christmas"]
 
 
     if l > 15:  
-        w = w0 + w1
+        w = short_w + long_w
     else:       
-        w = w0
+        w = short_w
 
     s = w[random.randint(0, len(w) - 1)]
 
-    for i in range(len(s)):
-        x = random.randint(0, 1)
-        if x == 0:
-            s = list(s)
-            s[i] = s[i].upper()
-            s = ''.join(s)
+    #This "dice" tells the program whether to just keep the word as it is, make the first letter
+    #upper case, or just to go through the words letters and randomly make some of the letters uppercase.
+    x = random.randint(0,6)
+
+    if x == 0:
+        return s
+
+    elif x == 1:
+        s = list(s)
+        s[0] = s[0].upper()
+        s = ''.join(s)
+
+    else:
+        
+        #This for loop goes through the chosen (random) word, and replaces some of the letters with uppercase letters.
+        for i in range(len(s)):
+            x = random.randint(0, 1)
+            if x == 0:
+                s = list(s)
+                s[i] = s[i].upper()
+                s = ''.join(s)
 
     return s
 
@@ -80,13 +93,11 @@ def create_password(c, w, l):
 
     verbose_info("Starting password generation...")
 
-    if l < 10:
-        verbose_warning("All passwords under 10 chars are very weak (even 10 is very weak). I dont recommend using a password this short...")
-
     if l == 1:
         if c == '':
             verbose_warning("Unable to create password, because there were no characters to use and the length was too short...")
             error("Unable to create password...", 1)
+
         verbose_warning("The password length is set to 1, not good...")
         verbose_info("Due to the short length the normal process wont work, the program will select a random char from the chars list...")
 
@@ -104,12 +115,7 @@ def create_password(c, w, l):
                     break
             return password[:l]
         else:
-            warning("No characters or words to generate password with...")
-            verbose_info("This is most likely because 'none' was selected with chars, and 'no words' was selected...")
-
-            info("Due to this exiting...")
-            verbose_info("Exiting with exit code 0...")
-            sys.exit(0)
+            error("No charaters or words to generate password with.", 1)
     
     if w == True:
         while True:
