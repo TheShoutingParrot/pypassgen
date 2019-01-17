@@ -9,7 +9,7 @@ def main():
     argv = sys.argv[1:]
 
     chars   = ''
-    words   = False
+    words   = True
     l       = None
 
     try:
@@ -45,17 +45,20 @@ def main():
 
             sys.exit(0)
 
-        elif opt in "--verbose":
+        elif opt == "--verbose":
             verbose_is_true()
 
-        elif opt in "-c":
+        elif opt in ("-c", "--chars"):
             chars = arg.lower()
 
-        elif opt in "-w":
-            if arg.lower() == 'yes' or arg.lower() == 'y':
+        elif opt in ("-w", "--words"):
+            if arg.lower() in ('no', 'n'):
+                words = False
+
+            elif arg.lower() in ('yes', 'y'):
                 words = True
 
-        elif opt in "-l":
+        elif opt in ("-l", "--length"):
             try:
                 l = int(arg)
             except:
@@ -65,7 +68,7 @@ def main():
     if chars == '':
         verbose_warning("The chars weren't specified...")
         chars = 'all'
-        verbose_info("Chars was changed to default (all)...")
+        verbose_info("Chars were changed to the default (all)...")
 
     if l == None:
         verbose_warning("No length defined...")
@@ -83,7 +86,4 @@ def main():
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except KeyboardInterrupt:
-        error("Keyboard Interrupted..", 1)
+    main()
