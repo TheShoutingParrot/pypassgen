@@ -1,5 +1,6 @@
 from __main__ import *
 from .info import *
+from .words import *
 
 import random
 
@@ -45,22 +46,11 @@ def rand_chars(c, l):
     return s
         
 def rand_word(l):
-    # Some of the words here are from https://randomword.com... That is why some words are weird...
-    short_w = ["word", "rust", "linux", "gnu", "foo", "hello", "love", "snow", "zoo", "truck", "elon", "musk", "nasa",
-            "time", "goo", "grape", "by", "the", "way",  "use", "arch", "ufo", "dog", "bad", "good", "the",
-            "ugly", "for", "god", "grunt", "ape", "food", "root", "boot", "loot", "duck", "go", "bit", "run", "rub",
-            "gun", "sum", "math", "bavian", "xmas", "new", "year", "dice"]
-
-    long_w = ["password", "programmer", "secure", "kilometer", "stallman", "universe", "shadow", "something", "bowman", 
-            "python", "odyssey", "adventure", "mathematical", "surgery", "language", "dummies", "summary", "daysure",
-            "omnigatherum", "miscellaneous", "collection", "antechinus", "argentocracy", "nutarian", "factualism", 
-            "pluviometer", "parasitaster", "curmurring", "obedientiary", "embryogenesis", "kymatology", "christmas"]
-
 
     if l > 15:  
-        w = short_w + long_w
+        w = short_words + long_words #Takes from the words.py file the words
     else:       
-        w = short_w
+        w = short_words
 
     s = w[random.randint(0, len(w) - 1)]
 
@@ -88,7 +78,8 @@ def rand_word(l):
 
     return s
 
-def create_password(c, w, l):
+def create_password(c, w, l, hr):
+
     password = ''
 
     verbose_info("Starting password generation...")
@@ -106,6 +97,23 @@ def create_password(c, w, l):
         except:
             verbose_warning("Unable to create password, reason unknown...")
             error("Unable to create password...", 1)
+
+    if hr == True:
+        while True:
+            password += rand_word(l)
+
+            x = random.randint(0, 1)
+
+            if x == 0:
+                password += '_'
+            elif x == 1:
+                password += str(random.randint(0,9))
+
+            else:
+                password += '.'
+
+            if len(password) >= l:
+                return password[:l]
 
     if c == '':
         if w == True:
@@ -128,9 +136,7 @@ def create_password(c, w, l):
                 password += rand_word(l)
             
             if len(password) >= l:
-                break
-
-        password = password[:l]
+                return password[:l]
 
     else:
         for i in range(l):

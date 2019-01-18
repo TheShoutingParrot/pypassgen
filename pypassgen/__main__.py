@@ -12,13 +12,16 @@ def main():
     words   = True
     l       = None
 
+    human_readable = False
+
     try:
-        opts, args = getopt.getopt(argv, "hc:w:l:", ["chars=", "words=", "length=", "verbose", "help"])
+        opts, args = getopt.getopt(argv, "hc:w:l:", ["chars=", "words=", "length=", "verbose", "help", "human-readable"])
+
     except getopt.GetoptError:
         error("Command line syntax error. For help on the usage/command line arguments run: foo.py -h", 2)
 
     for opt, arg in opts:
-        if opt == '-h' or opt == '--help':
+        if opt in ('-h', '--help'):
             info("Usage: main.py -c <chars> -w <words> -l <length>\n\nThe <chars> are the characters included in the password.\n" +
                     "Options for <chars>:\n" +
                     "-all:      A-Z, 0-9, special characters (such as: !, &, %, etc) [DEFAULT]\n" +
@@ -48,6 +51,9 @@ def main():
         elif opt == "--verbose":
             verbose_is_true()
 
+        elif opt == "--human-readable":
+            human_readable = True
+
         elif opt in ("-c", "--chars"):
             chars = arg.lower()
 
@@ -76,13 +82,10 @@ def main():
         verbose_info("The length was automically set to 15, because there was no length specified...")
 
     elif l < 1:
-        verbose_warning("The number that was inputed was under 1, which obviously wont work...")
-        l = 15
-        info("The length was automatically set to 15, because the input was invalid...")
+        error("Command line syntax error... The length inputed was under 1...")
 
-    password = colored(create_password(set_up_chars(chars), words, l), 'white', attrs=["bold"])
+    password = colored(create_password(set_up_chars(chars), words, l, human_readable), 'white', attrs=["bold"])
     print("The generated password is: '" + password + "'")
-
 
 
 if __name__ == "__main__":
