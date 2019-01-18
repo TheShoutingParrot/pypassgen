@@ -1,1 +1,1 @@
-from termcolor import *
+import sys
