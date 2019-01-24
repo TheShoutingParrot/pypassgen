@@ -23,6 +23,7 @@ def main():
     for opt, arg in opts:
         if opt in ('-h', '--help'):
             info("Usage: main.py -c <chars> -w <words> -l <length>\n\nThe <chars> are the characters included in the password.\n" +
+                    "Options: -c/--chars -w/--words -l/--length\n" +
                     "Options for <chars>:\n" +
                     "-all:      A-Z, 0-9, special characters (such as: !, &, %, etc) [DEFAULT]\n" +
                     "-az:       A-Z only\n" +
@@ -32,19 +33,16 @@ def main():
                     "-azsp:     A-Z and special characters\n" +
                     "-09sp:     0-9 and special characters\n" +
                     "-none:     No chars (outside of words).\n\n" +
-                    "The <words> option is the option if words are included or not."
+                    "The <words> option is the option if words are included or not.\n" +
                     "Options for <words>:\n" +
                     "-yes:      Include words in password. The chars setting doesn't effect this option,\n" +
-                    "            so if you set your <chars> to 09 the words will still use A-Z characters).\n" + 
-                    "-no:       No words included\n" +
-                    "The default is no words\n\n" +
+                    "            so if you set your <chars> to 09 the words will still use A-Z characters). [DEFAULT]\n" + 
+                    "-no:       No words included\n\n" +
                     "The <length> is a value that is the length of the password. If 0 is set then the program will default to 10\n\n" +
                     "Verbose usage: foo.py -c <chars> -w <words> -l <length> --verbose\n" +
                     "Verbose gives you more info then needed. Usually verbose tells you much more then you need, \n" +
-                    "it's mainly used for debugging. If you want to report a issue, putting verbose will help the developers.\n" +
-                    "---Other Info---\n" +
-                    "Example usage: main.py -c all -w n -l 13\n" +
-                    "Recommended password length is 20+ characters, if you can't remember a password that long then use a password manager.")
+                    "it's mainly used for debugging. If you want to report a issue, putting verbose will help the developers.\n\n" +
+                    "--human-readable makes the password more human readable.\n")
 
             sys.exit(0)
 
@@ -78,7 +76,7 @@ def main():
 
     if l == None:
         verbose_warning("No length defined...")
-        l = 15
+        l = 16
         verbose_info("The length was automically set to 15, because there was no length specified...")
 
     elif l < 1:
