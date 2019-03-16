@@ -22,8 +22,9 @@ def main():
 
     for opt, arg in opts:
         if opt in ('-h', '--help'):
-            info("Usage: main.py -c <chars> -w <words> -l <length>\n\nThe <chars> are the characters included in the password.\n" +
-                    "Options: -c/--chars -w/--words -l/--length\n" +
+            info("\nUsage: pypassgen -c <chars> -w <words> -l <length>\n" +
+                    "Options: -c/--chars -w/--words -l/--length\n\n" +
+                    "The <chars> are the characters to select from, for the password.\n" +
                     "Options for <chars>:\n" +
                     "-all:      A-Z, 0-9, special characters (such as: !, &, %, etc) [DEFAULT]\n" +
                     "-az:       A-Z only\n" +
@@ -39,7 +40,7 @@ def main():
                     "            so if you set your <chars> to 09 the words will still use A-Z characters). [DEFAULT]\n" + 
                     "-no:       No words included\n\n" +
                     "The <length> is a value that is the length of the password. If 0 is set then the program will default to 10\n\n" +
-                    "Verbose usage: foo.py -c <chars> -w <words> -l <length> --verbose\n" +
+                    "Verbose usage: pypassgen -c <chars> -w <words> -l <length> --verbose\n" +
                     "Verbose gives you more info then needed. Usually verbose tells you much more then you need, \n" +
                     "it's mainly used for debugging. If you want to report a issue, putting verbose will help the developers.\n\n" +
                     "--human-readable makes the password more human readable.\n")
@@ -62,6 +63,9 @@ def main():
             elif arg.lower() in ('yes', 'y'):
                 words = True
 
+            else:
+                error("Invalid option", 2);
+
         elif opt in ("-l", "--length"):
             try:
                 l = int(arg)
@@ -83,8 +87,9 @@ def main():
         error("Command line syntax error... The length inputed was under 1...")
 
     password = colored(create_password(set_up_chars(chars), words, l, human_readable), 'white', attrs=["bold"])
-    print("The generated password is: '" + password + "'")
+    print(password)
 
+    sys.exit(0)
 
 if __name__ == "__main__":
     main()

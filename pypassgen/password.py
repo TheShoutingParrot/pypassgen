@@ -30,9 +30,7 @@ def set_up_chars(c):
         chars +=  sp
 
     if chars == '':
-        verbose_warning("The chars option was invalid...")
-        verbose_info("Changing to default (all)...")
-        return az + n + sp 
+        error("The chars option was invalid...", 2)
 
     verbose_info("The characters that are gonna be used are: " + chars)
     return chars
