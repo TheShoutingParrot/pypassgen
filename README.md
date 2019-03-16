@@ -1,7 +1,7 @@
 # pypassgen
 
-This is a python command line password generator
+This is a python cli password generator
 
-For information on how to use this program, run pypassgen -h.
+# Licence
 
 This program is under the UNLICENSE.
